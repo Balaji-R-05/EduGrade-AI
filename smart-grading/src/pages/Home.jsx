@@ -1,10 +1,21 @@
-import React from "react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer'; // Import the Footer component
 import "./Home.css";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleTeacherClick = () => {
+    navigate('/teacher');
+  };
+
+  const handleStudentClick = () => {
+    navigate('/student'); // Navigate to the StudentPage
+  };
+
   return (
     <div className="home-page">
-      
       <section className="hero">
         <div className="hero-content">
           <h1>Welcome to EduGrade-AI!</h1>
@@ -39,8 +50,8 @@ const Home = () => {
 
       <section className="cta-bottom">
         <h2>Ready to take the next step?</h2>
-        <button className="cta-button">Teacher</button>
-        <button className="cta-button">Student</button>
+        <button className="cta-button" onClick={handleTeacherClick}>Teacher</button>
+        <button className="cta-button" onClick={handleStudentClick}>Student</button>
       </section>
 
       <section className="faq">
@@ -59,6 +70,9 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      {/* Add the Footer component here */}
+      <Footer />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import Navigation from "./components/Navigation";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import Teacher from '../src/pages/Teacher/Teacher';
-
+import StudentPage from "./pages/student/StudentPage";
 function App() {
   return (
     <Router>
@@ -11,7 +11,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/teacher" element={<Teacher/>}/>
+        <Route path="/teacher" element={<Teacher />} />
+        <Route path="/student" element={<StudentPage />}/>
       </Routes>
     </Router>
   );

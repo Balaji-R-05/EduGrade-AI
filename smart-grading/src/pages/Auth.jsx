@@ -19,6 +19,8 @@ function Auth() {
   const [user, setUser] = useState(null);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false); // State to toggle reset password UI
+  const [resetEmail, setResetEmail] = useState(""); // State for reset email input
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
 
@@ -98,14 +100,16 @@ function Auth() {
 
   // Forgot Password
   const handleForgotPassword = async () => {
-    if (!email) {
-      alert("Please enter your email to reset your password.");
+    if (!resetEmail || !isValidEmail(resetEmail)) {
+      alert("Please enter a valid email address.");
       return;
     }
     try {
       setLoading(true);
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, resetEmail);
       alert("Password reset email sent! Check your inbox.");
+      setShowResetPassword(false); // Hide reset password UI after sending email
+      setResetEmail(""); // Clear reset email input
     } catch (error) {
       alert(error.message);
     } finally {
@@ -139,51 +143,72 @@ function Auth() {
           <p className="welcome-message">You're signed in as {user.email}</p>
         ) : (
           <>
-            <input
-              type="email"
-              className="auth-input"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              className="auth-input"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            {!showResetPassword ? (
+              <>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  type="password"
+                  className="auth-input"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
 
-            <button className="auth-button primary" onClick={handleSignIn} disabled={!isValidEmail(email) || loading}>
-              {loading ? "Signing In..." : "Sign In"}
-            </button>
-            <button className="auth-button primary" onClick={handleSignUp} disabled={!isValidEmail(email) || loading}>
-              {loading ? "Signing Up..." : "Sign Up"}
-            </button>
+                <button className="auth-button primary" onClick={handleSignIn} disabled={!isValidEmail(email) || loading}>
+                  {loading ? "Signing In..." : "Sign In"}
+                </button>
+                <button className="auth-button primary" onClick={handleSignUp} disabled={!isValidEmail(email) || loading}>
+                  {loading ? "Signing Up..." : "Sign Up"}
+                </button>
 
-            <div className="separator">OR</div>
+                <div className="separator">OR</div>
 
-            <button className="auth-button google" onClick={handleGoogleSignIn} disabled={loading}>
-              <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" />
-              {loading ? "Signing in..." : "Sign in with Google"}
-            </button>
+                <button className="auth-button google" onClick={handleGoogleSignIn} disabled={loading}>
+                  <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo" />
+                  {loading ? "Signing in..." : "Sign in with Google"}
+                </button>
 
-            <div className="auth-footer">
-              <p>
-                Forgot your password?{" "}
-                <a href="#" onClick={handleForgotPassword}>
-                  Reset here
-                </a>
-              </p>
-            </div>
+                <div className="auth-footer">
+                  <p>
+                    Forgot your password?{" "}
+                    <a href="#" onClick={() => setShowResetPassword(true)}>
+                      Reset here
+                    </a>
+                  </p>
+                </div>
 
-            {user && !isEmailVerified && (
-              <p>
-                Your email is not verified.{" "}
-                <a href="#" onClick={handleResendVerification}>
-                  Resend verification email
-                </a>
-              </p>
+                {user && !isEmailVerified && (
+                  <p>
+                    Your email is not verified.{" "}
+                    <a href="#" onClick={handleResendVerification}>
+                      Resend verification email
+                    </a>
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <h3>Reset Password</h3>
+                <input
+                  type="email"
+                  className="auth-input"
+                  placeholder="Enter your email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                />
+                <button className="auth-button primary" onClick={handleForgotPassword} disabled={!isValidEmail(resetEmail) || loading}>
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+                <button className="auth-button secondary" onClick={() => setShowResetPassword(false)}>
+                  Cancel
+                </button>
+              </>
             )}
           </>
         )}
