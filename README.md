@@ -1,7 +1,7 @@
 # EduGrade-AI - Smart Grading &amp; Feedback Assistant
 
 Lightweight, AI-powered teacher assistant that automates assignment grading and provides personalized feedback to students, leveraging free or low-cost tools to ensure affordability and accessibility.
-
+# explore now[https://smart-grading-system-g3fa.vercel.app/]
 
 ## Objectives
 
